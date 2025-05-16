@@ -1,4 +1,4 @@
-# AI or Human? Quiz
+# Quiz - AI or Human? 
 
 This is a simple web quiz where users are challenged to identify whether content was created by AI or by a human.
 
