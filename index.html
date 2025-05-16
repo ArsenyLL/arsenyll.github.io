@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI or Human? Quiz</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .quiz-container {
+            background-color: white;
+            padding: 10px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            width: 100%;
+            max-width: 100%;
+            box-sizing: border-box;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            width: 100%;
+        }
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #444;
+        }
+        .image-container {
+            width: 100%;
+            height: 70vh; /* Use viewport height for better responsiveness */
+            margin: 20px 0;
+            border: 2px solid #ccc;
+            overflow: auto;
+            box-sizing: border-box;
+        }
+        .content-image {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+        .buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+            width: 100%;
+        }
+        button {
+            padding: 12px 24px;
+            font-size: 1rem;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        .ai-btn {
+            background-color: #ff6b6b;
+            color: white;
+        }
+        .human-btn {
+            background-color: #4dabf7;
+            color: white;
+        }
+        .result-container {
+            min-height: 120px; /* Reserve space for result and next button */
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+        }
+        .result {
+            text-align: center;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            min-height: 30px;
+            width: 100%;
+        }
+        .correct {
+            color: #2ecc71;
+        }
+        .incorrect {
+            color: #e74c3c;
+        }
+        .stats {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 1.1rem;
+            width: 100%;
+        }
+        .next-btn {
+            display: block;
+            margin: 0 auto;
+            padding: 10px 20px;
+            background-color: #6c5ce7;
+            color: white;
+        }
+        .score-display {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            width: 100%;
+        }
+        .progress {
+            margin-top: 20px;
+            text-align: center;
+            color: #666;
+            width: 100%;
+        }
+        /* Add media queries for better responsiveness */
+        @media (max-width: 768px) {
+            .buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            button {
+                width: 80%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Quiz: AI or Human</h1>
+    
+    <div class="quiz-container">
+        <div class="progress">Question <span id="current-question">1</span> of <span id="total-questions">10</span></div>
+        
+        <div class="image-container">
+            <img id="content-image" class="content-image" alt="Content example">
+        </div>
+        
+        <div class="buttons">
+            <button class="ai-btn" onclick="makeGuess('ai')">AI Generated</button>
+            <button class="human-btn" onclick="makeGuess('human')">Human Created</button>
+        </div>
+        
+        <div class="result-container">
+            <div id="result" class="result"></div>
+            <button id="next-btn" class="next-btn" style="display: none;" onclick="nextQuestion()">Next Question</button>
+        </div>
+        
+        <div class="score-display">Score: <span id="score">0</span> / <span id="total-answered">0</span></div>
+    </div>
+
+    <script>
+        // Array of all available examples
+        const aiExamples = [
+            "ai/1.png",
+            "ai/2.png",
+            "ai/3.png",
+            "ai/4.png",
+            "ai/5.png",
+            "ai/6.png",
+            "ai/7.png",
+            "ai/8.png",
+            "ai/9.png",
+            "ai/10.png",
+            "ai/11.png"
+        ];
+        
+        const humanExamples = [
+            "human/1.png",
+            "human/2.png",
+            "human/3.png",
+            "human/4.png",
+            "human/5.png",
+            "human/6.png",
+            "human/7.png"
+        ];
+        
+        // Game state
+        let currentExamples = [];
+        let currentIndex = 0;
+        let score = 0;
+        let totalAnswered = 0;
+        
+        // Initialize the game
+        function initGame() {
+            // Select 5 random examples from each category
+            const selectedAiExamples = getRandomSubset(aiExamples, 5).map(path => ({ path, source: 'ai' }));
+            const selectedHumanExamples = getRandomSubset(humanExamples, 5).map(path => ({ path, source: 'human' }));
+            
+            // Combine and shuffle the selected examples
+            const allExamples = [...selectedAiExamples, ...selectedHumanExamples];
+            shuffleArray(allExamples);
+            
+            // Set as current examples
+            currentExamples = allExamples;
+            document.getElementById('total-questions').textContent = currentExamples.length;
+            
+            // Load the first example
+            loadCurrentExample();
+        }
+        
+        // Get a random subset of an array
+        function getRandomSubset(array, size) {
+            const shuffled = [...array];
+            shuffleArray(shuffled);
+            return shuffled.slice(0, size);
+        }
+        
+        // Load the current example as an image
+        function loadCurrentExample() {
+            const imageElement = document.getElementById('content-image');
+            imageElement.src = currentExamples[currentIndex].path;
+            document.getElementById('current-question').textContent = currentIndex + 1;
+            document.getElementById('result').textContent = '';
+            document.getElementById('result').className = 'result';
+            document.getElementById('next-btn').style.display = 'none';
+        }
+        
+        // Handle user guess
+        function makeGuess(guess) {
+            const correctSource = currentExamples[currentIndex].source;
+            const resultElement = document.getElementById('result');
+            
+            totalAnswered++;
+            document.getElementById('total-answered').textContent = totalAnswered;
+            
+            if (guess === correctSource) {
+                score++;
+                document.getElementById('score').textContent = score;
+                resultElement.textContent = 'Correct! This was ' + (correctSource === 'ai' ? 'AI-generated.' : 'created by a human.');
+                resultElement.className = 'result correct';
+            } else {
+                resultElement.textContent = 'Incorrect. This was actually ' + (correctSource === 'ai' ? 'AI-generated.' : 'created by a human.');
+                resultElement.className = 'result incorrect';
+            }
+            
+            document.getElementById('next-btn').style.display = 'block';
+        }
+        
+        // Move to the next question
+        function nextQuestion() {
+            currentIndex++;
+            
+            if (currentIndex < currentExamples.length) {
+                loadCurrentExample();
+            } else {
+                // Quiz is finished
+                const quizContainer = document.querySelector('.quiz-container');
+                quizContainer.innerHTML = `
+                    <h2>Quiz Complete!</h2>
+                    <div class="stats">
+                        <p>Your final score: ${score} out of ${totalAnswered}</p>
+                        <p>Accuracy: ${Math.round((score / totalAnswered) * 100)}%</p>
+                    </div>
+                    <button onclick="location.reload()" class="next-btn">Play Again</button>
+                `;
+            }
+        }
+        
+        // Utility function to shuffle an array
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+        
+        // Start the game when the page loads
+        window.onload = initGame;
+    </script>
+</body>
+</html> 
