@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quiz - AI or Human?</title>
+    <title>AI or Human? Quiz</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -117,6 +117,34 @@
             color: #666;
             width: 100%;
         }
+        .finish-message {
+            text-align: left;
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            line-height: 1.6;
+        }
+        .finish-message h3 {
+            color: #333;
+            margin-bottom: 15px;
+        }
+        .finish-message ul {
+            margin-left: 20px;
+            margin-bottom: 15px;
+        }
+        .finish-message ul li {
+            margin-bottom: 8px;
+        }
+        .finish-message p {
+            margin-bottom: 15px;
+        }
+        .finish-message em {
+            font-style: italic;
+        }
+        .finish-message strong {
+            font-weight: bold;
+        }
         /* Add media queries for better responsiveness */
         @media (max-width: 768px) {
             .buttons {
@@ -162,7 +190,6 @@
             "ai/5.png",
             "ai/6.png",
             "ai/7.png",
-            "ai/8.png",
             "ai/9.png",
             "ai/10.png",
             "ai/11.png"
@@ -187,8 +214,8 @@
         // Initialize the game
         function initGame() {
             // Select 5 random examples from each category
-            const selectedAiExamples = getRandomSubset(aiExamples, 5).map(path => ({ path, source: 'ai' }));
-            const selectedHumanExamples = getRandomSubset(humanExamples, 5).map(path => ({ path, source: 'human' }));
+            const selectedAiExamples = getRandomSubset(aiExamples, 2).map(path => ({ path, source: 'ai' }));
+            const selectedHumanExamples = getRandomSubset(humanExamples, 2).map(path => ({ path, source: 'human' }));
             
             // Combine and shuffle the selected examples
             const allExamples = [...selectedAiExamples, ...selectedHumanExamples];
@@ -254,6 +281,23 @@
                     <div class="stats">
                         <p>Your final score: ${score} out of ${totalAnswered}</p>
                         <p>Accuracy: ${Math.round((score / totalAnswered) * 100)}%</p>
+                    </div>
+                    <div class="finish-message">
+                        <h3>Tips on Spotting AI-Generated Content</h3>
+                        <p>As you have seen it is not always easy to spot GAI pages with the naked eye, though here are some tips how to spot GAI pages visually:</p>
+                        <ul>
+                            <li>Overuse of paragraphs, resulting in many paragraphs, even if some of them are quite short</li>
+                            <li>Overuse of bullets and lists</li>
+                            <li>Overuse of colons</li>
+                            <li>Summary/conclusions paragraph</li>
+                            <li>Factual errors (hallucinations)</li>
+                            <li><b>Excessive ads monetization</b></li>
+                        </ul>
+                        <p>However if the GAI operator ("author") is seasoned enough it is possible to address most of the above signals via the prompt instructions. </p>
+                            <br/>
+                            <h3>DoubleVerify provides a solution that doesn't rely on any of the indicators above and will be able to detect GAI content regardless, by leveraging our in-house state-of-the-art AI model to detect GAI content.</h3>
+                        <p><strong>Lastly</strong>, GAI models in general and LLMs in particular are evolving fast and detections methods from last year won't work today. 
+                            In order to be able to consistently detect such content - a professional team is required. The team at DV is researching, developing and improving on daily basis - keeping up with all the latest advancements of Generative AI/p>
                     </div>
                     <button onclick="location.reload()" class="next-btn">Play Again</button>
                 `;
