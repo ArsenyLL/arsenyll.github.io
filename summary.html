@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI or Human? Quiz Results</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .results-container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+            box-sizing: border-box;
+        }
+        h1, h2 {
+            text-align: center;
+            color: #333;
+        }
+        .stats {
+            text-align: center;
+            margin: 30px 0;
+            font-size: 1.2rem;
+        }
+        .accuracy-badge {
+            display: inline-block;
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-weight: bold;
+            color: white;
+            margin: 10px 0;
+        }
+        .finish-message {
+            text-align: left;
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            line-height: 1.6;
+        }
+        .finish-message h3 {
+            color: #333;
+            margin-bottom: 15px;
+        }
+        .finish-message ul {
+            margin-left: 20px;
+            margin-bottom: 15px;
+        }
+        .finish-message ul li {
+            margin-bottom: 8px;
+        }
+        .finish-message p {
+            margin-bottom: 15px;
+        }
+        .next-btn {
+            display: block;
+            margin: 20px auto;
+            padding: 12px 24px;
+            background-color: #6c5ce7;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>AI or Human Quiz Results</h1>
+    
+    <div class="results-container">
+        <h2>Quiz Complete!</h2>
+        
+        <div class="stats">
+            <p>Your final score: <span id="score">0</span> out of <span id="total">0</span></p>
+            <div id="accuracy-container">
+                <p>Accuracy: <span id="accuracy">0</span>%</p>
+                <div id="accuracy-badge" class="accuracy-badge"></div>
+            </div>
+        </div>
+        
+        <div class="finish-message">
+            <h3>Tips on Spotting AI-Generated Content</h3>
+            <p>As you have seen it is not always easy to spot GAI pages with the naked eye, though here are some tips how to spot GAI pages visually:</p>
+            <ul>
+                <li>Overuse of paragraphs, resulting in many paragraphs, even if some of them are quite short</li>
+                <li>Overuse of bullets and lists</li>
+                <li>Overuse of colons</li>
+                <li>Summary/conclusions paragraph</li>
+                <li>Factual errors (hallucinations)</li>
+                <li><b>Excessive ads monetization</b></li>
+            </ul>
+            <p>However if the GAI operator ("author") is seasoned enough it is possible to address most of the above signals via the prompt instructions.</p>
+            <br/>
+            <h3>DoubleVerify provides a solution that doesn't rely on any of the indicators above and will be able to detect GAI content regardless, by leveraging our in-house state-of-the-art AI model.</h3>
+            <p><strong>Lastly</strong>, GAI models in general and LLMs in particular are evolving fast and detections methods from last year won't work today. 
+                In order to be able to consistently detect such content - a professional team is required. The team at DV is researching, developing and improving on daily basis - keeping up with all the latest advancements of Generative AI.</p>
+        </div>
+        
+        <button onclick="window.location.href='index.html'" class="next-btn">Play Again</button>
+    </div>
+
+    <script>
+        // Parse URL parameters
+        function getURLParameters() {
+            const params = new URLSearchParams(window.location.search);
+            return {
+                score: parseInt(params.get('score') || '0'),
+                total: parseInt(params.get('total') || '0')
+            };
+        }
+        
+        // Set badge color based on accuracy percentage
+        function setBadgeColor(accuracyPercent) {
+            const badge = document.getElementById('accuracy-badge');
+            
+            if (accuracyPercent >= 80) {
+                badge.style.backgroundColor = '#2ecc71'; // Green
+                badge.textContent = 'Excellent!';
+            } else if (accuracyPercent >= 60) {
+                badge.style.backgroundColor = '#3498db'; // Blue
+                badge.textContent = 'Good Job!';
+            } else if (accuracyPercent >= 40) {
+                badge.style.backgroundColor = '#f39c12'; // Orange
+                badge.textContent = 'Not Bad';
+            } else {
+                badge.style.backgroundColor = '#e74c3c'; // Red
+                badge.textContent = 'Keep Practicing';
+            }
+        }
+        
+        // Initialize the results page
+        function initResultsPage() {
+            const { score, total } = getURLParameters();
+            const accuracyPercent = total > 0 ? Math.round((score / total) * 100) : 0;
+            
+            document.getElementById('score').textContent = score;
+            document.getElementById('total').textContent = total;
+            document.getElementById('accuracy').textContent = accuracyPercent;
+            
+            setBadgeColor(accuracyPercent);
+        }
+        
+        // Run initialization when page loads
+        window.onload = initResultsPage;
+    </script>
+</body>
+</html> 
