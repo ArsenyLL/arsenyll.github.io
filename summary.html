@@ -95,36 +95,39 @@
 <body>
     <div class="header">
         <img src="dvlogo.png" alt="DoubleVerify Logo" class="logo">
-        <h1 class="title">AI or Human Quiz Results</h1>
+        <!-- <h1 class="title">AI or Human Quiz Results</h1> -->
     </div>
     
     <div class="results-container">
-        <h2>Quiz Complete!</h2>
+        <h2>Congratulations on Completing the GenAI Detection Quiz!</h2>
         
         <div class="stats">
-            <p>Your final score: <span id="score">0</span> out of <span id="total">0</span></p>
-            <div id="accuracy-container">
+            <p>Your final score: <span id="score">0</span> / <span id="total">0</span></p>
+            <!-- <div id="accuracy-container">
                 <p>Accuracy: <span id="accuracy">0</span>%</p>
                 <div id="accuracy-badge" class="accuracy-badge"></div>
-            </div>
+            </div> -->
         </div>
         
         <div class="finish-message">
-            <h3>Tips on Spotting AI-Generated Content</h3>
-            <p>As you have seen it is not always easy to spot GAI pages with the naked eye, though here are some tips how to spot GAI pages visually:</p>
+            <!-- <h3>Tips on Spotting AI-Generated Content</h3> -->
+            <p>Great job on finishing the quiz that tests your ability to distinguish between AI-generated and human-written content!
+                It's not an easy skill to master, but it's becoming increasingly important in today's digital landscape.</p>
+            <h3>Here are a few tips on spotting GAI content by our domain experts:</h3>
             <ul>
-                <li>Overuse of paragraphs, resulting in many paragraphs, even if some of them are quite short</li>
-                <li>Overuse of bullets and lists</li>
-                <li>Overuse of colons</li>
-                <li>Summary/conclusions paragraph</li>
-                <li>Factual errors (hallucinations)</li>
-                <li><b>Excessive ads monetization</b></li>
+                <li><b>Paragraph and capitalizing structure:</b> AI tends to create numerous paragraphs, often breaking content into shorter chunks than a human writer might, with capitalized headlines that actually make the final result harder to read.</li>
+                <li><b>Lists overuse:</b> Frequent bulleted or numbered lists throughout the content</li>
+                <li><b>Excessive colons:</b> More frequent use of colons than typical in human writing</li>
+                <li><b>Formulaic conclusions:</b> It is quite common to see AI-generated content concluding with a formulaic statement like "In conclusion..." or "To sum up..."</li>
+                <li><b>Factual inaccuracies:</b> Watch for "hallucinations" or factual errors that a knowledgeable human wouldn't make</li>
+                <li><b>Heavy ad monetization:</b> Many AI-generated pages feature excessive advertising</li>
             </ul>
-            <p>However if the GAI operator ("author") is seasoned enough it is possible to address most of the above signals via the prompt instructions.</p>
+            <p>Remember that experienced AI operators can instruct their systems to avoid these telltale signs, making detection increasingly challenging as the technology evolves.</p>
             <br/>
-            <h3>DoubleVerify provides a solution that doesn't rely on any of the indicators above and will be able to detect GAI content regardless, by leveraging our in-house state-of-the-art AI model.</h3>
-            <p><strong>Lastly</strong>, GAI models in general and LLMs in particular are evolving fast and detections methods from last year won't work today. 
-                In order to be able to consistently detect such content - a professional team is required. The team at DV is researching, developing and improving on daily basis - keeping up with all the latest advancements of Generative AI.</p>
+            <h3>Staying Ahead of AI Evolution - DV Identifies Low-Quality AI Content At Scale</h3>
+            <p>AI detection is a moving target. Large language models (LLMs) are evolving rapidly, making last year's detection methods potentially obsolete today.
+                This is why DoubleVerify has developed specialized solutions that don't rely solely on the visual indicators mentioned above. Their approach leverages state-of-the-art AI models specifically designed to detect AI-generated content regardless of how well it's disguised.
+                DoubleVerify's professional team continuously researches, develops, and improves their detection methods to keep pace with all the latest advancements in Generative AI, ensuring reliable identification of AI-created content even as the technology advances.</p>
         </div>
         
         <button onclick="window.location.href='index.html'" class="next-btn">Play Again</button>
@@ -168,7 +171,7 @@
             document.getElementById('total').textContent = total;
             document.getElementById('accuracy').textContent = accuracyPercent;
             
-            setBadgeColor(accuracyPercent);
+            //setBadgeColor(accuracyPercent);
         }
         
         // Run initialization when page loads
