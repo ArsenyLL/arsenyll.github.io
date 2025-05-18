@@ -13,9 +13,24 @@
             width: 100%;
             box-sizing: border-box;
         }
+        .header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .logo {
+            max-width: 150px;
+            height: auto;
+            margin-right: 20px;
+        }
+        .title {
+            flex-grow: 1;
+            text-align: center;
+            color: #333;
+        }
         .quiz-container {
             background-color: white;
-            padding: 10px;
+            padding: 20px;
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             margin-bottom: 20px;
@@ -33,10 +48,20 @@
             margin-bottom: 20px;
             color: #444;
         }
+        .quiz-content {
+            display: flex;
+            flex-direction: row;
+            gap: 20px;
+        }
+        .left-panel {
+            display: flex;
+            flex-direction: column;
+            width: 25%;
+            min-width: 250px;
+        }
         .image-container {
-            width: 100%;
-            height: 70vh; /* Use viewport height for better responsiveness */
-            margin: 20px 0;
+            width: 75%;
+            height: 70vh;
             border: 2px solid #ccc;
             overflow: auto;
             box-sizing: border-box;
@@ -48,8 +73,8 @@
         }
         .buttons {
             display: flex;
-            justify-content: center;
-            gap: 20px;
+            flex-direction: column;
+            gap: 15px;
             margin-top: 20px;
             width: 100%;
         }
@@ -70,7 +95,7 @@
             color: white;
         }
         .result-container {
-            min-height: 120px; /* Reserve space for result and next button */
+            min-height: 120px;
             margin-top: 20px;
             display: flex;
             flex-direction: column;
@@ -99,7 +124,7 @@
         }
         .next-btn {
             display: block;
-            margin: 0 auto;
+            width: 100%;
             padding: 10px 20px;
             background-color: #6c5ce7;
             color: white;
@@ -112,10 +137,11 @@
             width: 100%;
         }
         .progress {
-            margin-top: 20px;
-            text-align: center;
+            margin-bottom: 20px;
+            text-align: left;
             color: #666;
             width: 100%;
+            font-weight: bold;
         }
         .finish-message {
             text-align: left;
@@ -146,38 +172,59 @@
             font-weight: bold;
         }
         /* Add media queries for better responsiveness */
-        @media (max-width: 768px) {
+        @media (max-width: 900px) {
+            .quiz-content {
+                flex-direction: column;
+            }
+            .left-panel {
+                width: 100%;
+                order: 2;
+            }
+            .image-container {
+                width: 100%;
+                order: 1;
+                height: 50vh;
+            }
+            .buttons {
+                flex-direction: row;
+                justify-content: center;
+            }
+        }
+        @media (max-width: 600px) {
             .buttons {
                 flex-direction: column;
-                align-items: center;
-            }
-            button {
-                width: 80%;
             }
         }
     </style>
 </head>
 <body>
-    <h1>Quiz: AI or Human</h1>
+    <div class="header">
+        <img src="dvlogo.png" alt="DoubleVerify Logo" class="logo">
+        <h1 class="title">Quiz: AI or Human</h1>
+    </div>
     
     <div class="quiz-container">
-        <div class="progress">Question <span id="current-question">1</span> of <span id="total-questions">10</span></div>
-        
-        <div class="image-container">
-            <img id="content-image" class="content-image" alt="Content example">
+        <div class="quiz-content">
+            <div class="left-panel">
+                <div class="progress">Question <span id="current-question">1</span> of <span id="total-questions">10</span></div>
+                
+                <div class="buttons">
+                    <button class="ai-btn" onclick="makeGuess('ai')">AI Generated</button>
+                    <button class="human-btn" onclick="makeGuess('human')">Human Created</button>
+                </div>
+                
+                <div class="result-container">
+                    <div id="result" class="result"></div>
+                    <button id="next-btn" class="next-btn" style="display: none;" onclick="nextQuestion()">Next Question</button>
+                </div>
+                
+                <div class="score-display">Score: <span id="score">0</span> / <span id="total-answered">0</span></div>
+            </div>
+            
+            <div class="image-container">
+                <img id="content-image" class="content-image" alt="Content example">
+            </div>
         </div>
-        
-        <div class="buttons">
-            <button class="ai-btn" onclick="makeGuess('ai')">AI Generated</button>
-            <button class="human-btn" onclick="makeGuess('human')">Human Created</button>
-        </div>
-        
-        <div class="result-container">
-            <div id="result" class="result"></div>
-            <button id="next-btn" class="next-btn" style="display: none;" onclick="nextQuestion()">Next Question</button>
-        </div>
-        
-        <div class="score-display">Score: <span id="score">0</span> / <span id="total-answered">0</span></div>
     </div>
 
     <script>

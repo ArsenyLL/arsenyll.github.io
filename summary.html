@@ -13,6 +13,21 @@
             width: 100%;
             box-sizing: border-box;
         }
+        .header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .logo {
+            max-width: 150px;
+            height: auto;
+            margin-right: 20px;
+        }
+        .title {
+            flex-grow: 1;
+            text-align: center;
+            color: #333;
+        }
         .results-container {
             background-color: white;
             padding: 20px;
@@ -78,7 +93,10 @@
     </style>
 </head>
 <body>
-    <h1>AI or Human Quiz Results</h1>
+    <div class="header">
+        <img src="dvlogo.png" alt="DoubleVerify Logo" class="logo">
+        <h1 class="title">AI or Human Quiz Results</h1>
+    </div>
     
     <div class="results-container">
         <h2>Quiz Complete!</h2>
