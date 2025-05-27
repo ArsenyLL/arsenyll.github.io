@@ -90,6 +90,46 @@
             font-weight: bold;
             cursor: pointer;
         }
+        .additional-resources {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+        }
+        .additional-resources h3 {
+            color: #333;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .resource-item {
+            margin-bottom: 20px;
+        }
+        .resource-link {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            color: #333;
+            padding: 15px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: box-shadow 0.3s ease;
+        }
+        .resource-link:hover {
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+            text-decoration: none;
+            color: #333;
+        }
+        .qr-code {
+            width: 140px;
+            height: 140px;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+        .resource-text {
+            font-weight: bold;
+            line-height: 1.4;
+        }
     </style>
 </head>
 <body>
@@ -123,11 +163,19 @@
                 <li><b>Heavy ad monetization:</b> Many AI-generated pages feature excessive advertising</li>
             </ul>
             <p>Remember that experienced AI operators can instruct their systems to avoid these telltale signs, making detection increasingly challenging as the technology evolves.</p>
-            <br/>
             <h3>Staying Ahead of AI Evolution - DV Identifies Low-Quality AI Content At Scale</h3>
-            <p>AI detection is a moving target. Large language models (LLMs) are evolving rapidly, making last year's detection methods potentially obsolete today.
-                This is why DoubleVerify has developed specialized solutions that don't rely solely on the visual indicators mentioned above. Their approach leverages state-of-the-art AI models specifically designed to detect AI-generated content regardless of how well it's disguised.
+            <p>AI detection is a moving target. Large Language Models (LLMs) are evolving rapidly, making last year's detection methods potentially obsolete today.
+                This is why DoubleVerify has developed specialized solutions that don't rely solely on the visual indicators mentioned above. Our approach leverages state-of-the-art AI models specifically designed to detect AI-generated content regardless of how well it's disguised.
                 DoubleVerify's professional team continuously researches, develops, and improves their detection methods to keep pace with all the latest advancements in Generative AI, ensuring reliable identification of AI-created content even as the technology advances.</p>
+        </div>
+        
+        <div class="additional-resources">            
+            <div class="resource-item">
+                <a href="https://doubleverify.com/the-rise-of-ai-generated-slop-sites-what-advertisers-need-to-know/" target="_blank" class="resource-link">
+                    <img src="QR1.png" alt="QR Code for AI-Generated Slop Sites article" class="qr-code">
+                    <span class="resource-text">Learn more about "The Rise of AI-Generated Slop Sites"</span>
+                </a>
+            </div>
         </div>
         
         <button onclick="window.location.href='index.html'" class="next-btn">Play Again</button>
