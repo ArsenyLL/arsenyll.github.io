@@ -17,6 +17,7 @@
             display: flex;
             align-items: center;
             margin-bottom: 20px;
+            position: relative;
         }
         .logo {
             max-width: 150px;
@@ -24,9 +25,13 @@
             margin-right: 20px;
         }
         .title {
-            flex-grow: 1;
+            position: absolute;
+            left: 0;
+            right: 0;
             text-align: center;
             color: #333;
+            margin: 0;
+            pointer-events: none;
         }
         .quiz-container {
             background-color: white;
@@ -87,11 +92,11 @@
             font-weight: bold;
         }
         .ai-btn {
-            background-color: #ff6b6b;
+            background-color: #6e2cc4ff;
             color: white;
         }
         .human-btn {
-            background-color: #4dabf7;
+            background-color: #34b234ff;
             color: white;
         }
         .result-container {
@@ -219,7 +224,7 @@
             display: block;
             width: 100%;
             padding: 12px 20px;
-            background-color: #6c5ce7;
+            background-color: #6e2cc4ff;
             color: white;
             border: none;
             border-radius: 5px;
@@ -230,7 +235,7 @@
         }
         
         .popup-next-btn:hover {
-            background-color: #5a4fcf;
+            background-color: #6e2cc4ff;
         }
         
         /* Hide the original result container */
