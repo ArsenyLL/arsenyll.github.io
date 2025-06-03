@@ -171,6 +171,72 @@
         .finish-message strong {
             font-weight: bold;
         }
+        /* Popup overlay styles */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        
+        .popup {
+            background-color: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        
+        .popup-result {
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+            min-height: 30px;
+        }
+        
+        .popup-insight {
+            font-style: italic;
+            font-size: 1.1rem;
+            line-height: 1.5;
+            margin: 20px 0;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            color: #444;
+        }
+        
+        .popup-next-btn {
+            display: block;
+            width: 100%;
+            padding: 12px 20px;
+            background-color: #6c5ce7;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        
+        .popup-next-btn:hover {
+            background-color: #5a4fcf;
+        }
+        
+        /* Hide the original result container */
+        .result-container {
+            display: none;
+        }
         /* Add media queries for better responsiveness */
         @media (max-width: 900px) {
             .quiz-content {
@@ -227,6 +293,15 @@
         </div>
     </div>
 
+    <!-- Popup overlay for results -->
+    <div id="overlay" class="overlay">
+        <div class="popup">
+            <div id="popup-result" class="popup-result"></div>
+            <div id="popup-insight" class="popup-insight"></div>
+            <button id="popup-next-btn" class="popup-next-btn" onclick="nextQuestion()">Next Question</button>
+        </div>
+    </div>
+
     <script>
         // Array of all available examples
         const aiExamples = [
@@ -250,8 +325,8 @@
         ];
 
         const dvInsights = [
-            "According to DV’s 2024 Global Insights Trends Report, 54% of marketers believe generative AI significantly negatively impacts media quality",
-            "DV's AI powered models have automatically identified thousands of low-quality websites where GenAI was the primary, if not the only, source of content",
+            "According to DV's 2024 Global Insights Trends Report, 54% of marketers believe generative AI significantly negatively impacts media quality",
+            "DV's AI powered models have automatically identified thousands of low-quality websites with GenAI content, and the trend is only accelerating",
             "DV's GenAI classification found over 1.5K extreme low-quality GenAI Websites that are driving 100M monthly impressions",
             "Low-Quality GenAI Websites often show overlap with practices of Ad Clutter and MFA (Made for Advertising / Made for Arbitrage)",
             "DV recently uncovered \"Synthetic Eco\", a network of over 200 'AI slop' sites that engage in misleading practices",
@@ -277,6 +352,9 @@
             // Set as current examples
             currentExamples = allExamples;
             document.getElementById('total-questions').textContent = currentExamples.length;
+
+            //shuffle insights
+            shuffleArray(dvInsights);
             
             // Load the first example
             loadCurrentExample();
@@ -294,34 +372,50 @@
             const imageElement = document.getElementById('content-image');
             imageElement.src = currentExamples[currentIndex].path;
             document.getElementById('current-question').textContent = currentIndex + 1;
-            document.getElementById('result').textContent = '';
-            document.getElementById('result').className = 'result';
-            document.getElementById('next-btn').style.display = 'none';
         }
         
         // Handle user guess
         function makeGuess(guess) {
             const correctSource = currentExamples[currentIndex].source;
-            const resultElement = document.getElementById('result');
+            const popupResultElement = document.getElementById('popup-result');
+            const popupInsightElement = document.getElementById('popup-insight');
+            const overlayElement = document.getElementById('overlay');
+            const popupNextBtn = document.getElementById('popup-next-btn');
             
             totalAnswered++;
             document.getElementById('total-answered').textContent = totalAnswered;
             
+            // Set the result text and styling
             if (guess === correctSource) {
                 score++;
                 document.getElementById('score').textContent = score;
-                resultElement.textContent = 'Correct! This was ' + (correctSource === 'ai' ? 'AI-generated.' : 'created by a human.');
-                resultElement.className = 'result correct';
+                popupResultElement.textContent = 'Correct! This was ' + (correctSource === 'ai' ? 'AI-generated.' : 'created by a human.');
+                popupResultElement.className = 'popup-result correct';
             } else {
-                resultElement.textContent = 'Incorrect. This was actually ' + (correctSource === 'ai' ? 'AI-generated.' : 'created by a human.');
-                resultElement.className = 'result incorrect';
+                popupResultElement.textContent = 'Incorrect. This was actually ' + (correctSource === 'ai' ? 'AI-generated.' : 'created by a human.');
+                popupResultElement.className = 'popup-result incorrect';
             }
             
-            document.getElementById('next-btn').style.display = 'block';
+            // Select and display a random DV insight
+            const randomInsight = dvInsights[(totalAnswered%dvInsights.length)-1];
+            popupInsightElement.textContent = randomInsight;
+            
+            // Update button text based on whether this is the last question
+            if (currentIndex === currentExamples.length - 1) {
+                popupNextBtn.textContent = 'Quiz Complete! Go to Summary';
+            } else {
+                popupNextBtn.textContent = 'Next Question';
+            }
+            
+            // Show the overlay
+            overlayElement.style.display = 'flex';
         }
         
         // Move to the next question
         function nextQuestion() {
+            // Hide the overlay
+            document.getElementById('overlay').style.display = 'none';
+            
             currentIndex++;
             
             if (currentIndex < currentExamples.length) {
