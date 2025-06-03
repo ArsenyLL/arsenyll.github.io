@@ -375,8 +375,13 @@
         // Load the current example as an image
         function loadCurrentExample() {
             const imageElement = document.getElementById('content-image');
+            const imageContainer = document.querySelector('.image-container');
+            
             imageElement.src = currentExamples[currentIndex].path;
             document.getElementById('current-question').textContent = currentIndex + 1;
+            
+            // Reset scroll position to top for the new question
+            imageContainer.scrollTop = 0;
         }
         
         // Handle user guess
