@@ -335,7 +335,7 @@
             "DV's GenAI classification found over 1.5K extreme low-quality GenAI Websites that are driving 100M monthly impressions",
             "Low-Quality GenAI Websites often show overlap with practices of Ad Clutter and MFA (Made for Advertising / Made for Arbitrage)",
             "DV recently uncovered \"Synthetic Eco\", a network of over 200 'AI slop' sites that engage in misleading practices",
-            "DV's GenAI solution supports multiple languages, including English, Spanish, German and Portuguese" 
+            "DV's GenAI solution supports multiple languages, including English, Spanish, German and French" 
         ];
         
         // Game state
@@ -403,7 +403,7 @@
             
             // Select and display a random DV insight
             const randomInsight = dvInsights[(totalAnswered%dvInsights.length)-1];
-            popupInsightElement.textContent = randomInsight;
+            popupInsightElement.innerHTML = '<strong>Fun Fact:</strong> ' + randomInsight;
             
             // Update button text based on whether this is the last question
             if (currentIndex === currentExamples.length - 1) {
