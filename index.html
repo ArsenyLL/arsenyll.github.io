@@ -408,6 +408,7 @@
             
             // Select and display a random DV insight
             const randomInsight = dvInsights[(totalAnswered%dvInsights.length)-1];
+            popupInsightElement.innerHTML = '';
             if (currentIndex < currentExamples.length - 1) {
                 popupInsightElement.innerHTML = '<strong>Fun Fact:</strong> ' + randomInsight;
             }
