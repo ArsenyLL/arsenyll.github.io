@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI or Human? Quiz</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            position: relative;
+        }
+        .logo {
+            max-width: 150px;
+            height: auto;
+            margin-right: 20px;
+        }
+        .title {
+            position: absolute;
+            left: 0;
+            right: 0;
+            text-align: center;
+            color: #333;
+            margin: 0;
+            pointer-events: none;
+        }
+        .quiz-container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            width: 100%;
+            max-width: 100%;
+            box-sizing: border-box;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            width: 100%;
+        }
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #444;
+        }
+        .quiz-content {
+            display: flex;
+            flex-direction: row;
+            gap: 20px;
+        }
+        .left-panel {
+            display: flex;
+            flex-direction: column;
+            width: 25%;
+            min-width: 250px;
+        }
+        .image-container {
+            width: 75%;
+            height: 70vh;
+            border: 2px solid #ccc;
+            overflow: auto;
+            box-sizing: border-box;
+        }
+        .content-image {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+        .buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 20px;
+            width: 100%;
+        }
+        button {
+            padding: 12px 24px;
+            font-size: 1rem;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        .ai-btn {
+            background-color: #6e2cc4ff;
+            color: white;
+        }
+        .human-btn {
+            background-color: #34b234ff;
+            color: white;
+        }
+        .result-container {
+            min-height: 120px;
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+        }
+        .result {
+            text-align: center;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            min-height: 30px;
+            width: 100%;
+        }
+        .correct {
+            color: #2ecc71;
+        }
+        .incorrect {
+            color: #e74c3c;
+        }
+        .stats {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 1.1rem;
+            width: 100%;
+        }
+        .next-btn {
+            display: block;
+            width: 100%;
+            padding: 10px 20px;
+            background-color: #6c5ce7;
+            color: white;
+        }
+        .score-display {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            width: 100%;
+        }
+        .progress {
+            margin-bottom: 20px;
+            text-align: left;
+            color: #666;
+            width: 100%;
+            font-weight: bold;
+        }
+        .finish-message {
+            text-align: left;
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            line-height: 1.6;
+        }
+        .finish-message h3 {
+            color: #333;
+            margin-bottom: 15px;
+        }
+        .finish-message ul {
+            margin-left: 20px;
+            margin-bottom: 15px;
+        }
+        .finish-message ul li {
+            margin-bottom: 8px;
+        }
+        .finish-message p {
+            margin-bottom: 15px;
+        }
+        .finish-message em {
+            font-style: italic;
+        }
+        .finish-message strong {
+            font-weight: bold;
+        }
+        /* Popup overlay styles */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        
+        .popup {
+            background-color: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        
+        .popup-result {
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+            min-height: 30px;
+        }
+        
+        .popup-insight {
+            font-style: italic;
+            font-size: 1.1rem;
+            line-height: 1.5;
+            margin: 20px 0;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            color: #444;
+        }
+        
+        .popup-next-btn {
+            display: block;
+            width: 100%;
+            padding: 12px 20px;
+            background-color: #6e2cc4ff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        
+        .popup-next-btn:hover {
+            background-color: #6e2cc4ff;
+        }
+        
+        /* Hide the original result container */
+        .result-container {
+            display: none;
+        }
+        /* Add media queries for better responsiveness */
+        @media (max-width: 900px) {
+            .quiz-content {
+                flex-direction: column;
+            }
+            .left-panel {
+                width: 100%;
+                order: 2;
+            }
+            .image-container {
+                width: 100%;
+                order: 1;
+                height: 50vh;
+            }
+            .buttons {
+                flex-direction: row;
+                justify-content: center;
+            }
+        }
+        @media (max-width: 600px) {
+            .buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <img src="dvlogo.png" alt="DoubleVerify Logo" class="logo">
+        <h1 class="title">Quiz: AI or Human</h1>
+    </div>
+    
+    <div class="quiz-container">
+        <div class="quiz-content">
+            <div class="left-panel">
+        <div class="progress">Question <span id="current-question">1</span> of <span id="total-questions">10</span></div>
+        
+        <div class="buttons">
+            <button class="ai-btn" onclick="makeGuess('ai')">AI Generated</button>
+            <button class="human-btn" onclick="makeGuess('human')">Human Created</button>
+        </div>
+        
+        <div class="result-container">
+            <div id="result" class="result"></div>
+            <button id="next-btn" class="next-btn" style="display: none;" onclick="nextQuestion()">Next Question</button>
+        </div>
+        
+        <div class="score-display">Score: <span id="score">0</span> / <span id="total-answered">0</span></div>
+            </div>
+            
+            <div class="image-container">
+                <img id="content-image" class="content-image" alt="Content example">
+            </div>
+        </div>
+    </div>
+
+    <!-- Popup overlay for results -->
+    <div id="overlay" class="overlay">
+        <div class="popup">
+            <div id="popup-result" class="popup-result"></div>
+            <div id="popup-insight" class="popup-insight"></div>
+            <button id="popup-next-btn" class="popup-next-btn" onclick="nextQuestion()">Next Question</button>
+        </div>
+    </div>
+
+    <script>
+        // Array of all available examples
+        const aiExamples = [
+            "ai/screencapture-breezysports-co-uk-2025-05-16-breaking-news-nascar-driver-handed-10-months-suspension-and-set-for-2026-return-after-facing-big-fine-following-a-controversial-incident-involving-a-social-media-post-2025-05-16-11_29_52.png",
+            "ai/screencapture-equityatlas-org-what-happened-to-willdabeast-and-janelle-ginestra-2025-05-15-18_32_31.png",
+            "ai/screencapture-gameflicky-readmore-insurance-everyday-ev-life-a-practical-guide-to-incorporating-electric-vehicles-into-your-routine-html-2025-05-14-12_43_04.png", 
+            "ai/screencapture-starttechnow-readermore-disease-home-remedies-for-toothache-html-2025-05-16-11_36_16.png",
+            "ai/screencapture-themezon-net-reasons-to-choose-vps-hosting-for-your-wordpress-website-2025-05-14-16_47_08.png",
+            "ai/screencapture-touristsecrets-destinations-united-states-washington-sail-the-scenic-routes-of-seattles-washington-state-ferries-2025-05-15-17_51_41.png",
+            "ai/screencapture-yerenews-news-11994-2025-05-15-18_23_15.png"
+        ];
+        
+        const humanExamples = [
+            "human/1.png",
+            "human/2.png",
+            "human/3.png",
+            "human/4.png",
+            "human/5.png",
+            "human/6.png",
+            "human/7.png"
+        ];
+
+        const dvInsights = [
+            "According to DV's 2024 Global Insights Trends Report, 54% of marketers believe generative AI significantly negatively impacts media quality",
+            "DV's AI powered models have automatically identified thousands of low-quality websites with GenAI content, and the trend is only accelerating",
+            "DV's GenAI classification found over 1.5K extreme low-quality GenAI Websites that are driving 100M monthly impressions",
+            "Low-Quality GenAI Websites often show overlap with practices of Ad Clutter and MFA (Made for Advertising / Made for Arbitrage)",
+            "DV recently uncovered \"Synthetic Eco\", a network of over 200 'AI slop' sites that engage in misleading practices",
+            "DV's GenAI solution supports multiple languages, including English, Spanish, German and French" 
+        ];
+        
+        // Game state
+        let currentExamples = [];
+        let currentIndex = 0;
+        let score = 0;
+        let totalAnswered = 0;
+        
+        // Initialize the game
+        function initGame() {
+            // Select 5 random examples from each category
+            const selectedAiExamples = getRandomSubset(aiExamples, 3).map(path => ({ path, source: 'ai' }));
+            const selectedHumanExamples = getRandomSubset(humanExamples, 3).map(path => ({ path, source: 'human' }));
+            
+            // Combine and shuffle the selected examples
+            const allExamples = [...selectedAiExamples, ...selectedHumanExamples];
+            shuffleArray(allExamples);
+            
+            // Set as current examples
+            currentExamples = allExamples;
+            document.getElementById('total-questions').textContent = currentExamples.length;
+
+            //shuffle insights
+            shuffleArray(dvInsights);
+            
+            // Load the first example
+            loadCurrentExample();
+        }
+        
+        // Get a random subset of an array
+        function getRandomSubset(array, size) {
+            const shuffled = [...array];
+            shuffleArray(shuffled);
+            return shuffled.slice(0, size);
+        }
+        
+        // Load the current example as an image
+        function loadCurrentExample() {
+            const imageElement = document.getElementById('content-image');
+            const imageContainer = document.querySelector('.image-container');
+            
+            imageElement.src = currentExamples[currentIndex].path;
+            document.getElementById('current-question').textContent = currentIndex + 1;
+            
+            // Reset scroll position to top for the new question
+            imageContainer.scrollTop = 0;
+        }
+        
+        // Handle user guess
+        function makeGuess(guess) {
+            const correctSource = currentExamples[currentIndex].source;
+            const popupResultElement = document.getElementById('popup-result');
+            const popupInsightElement = document.getElementById('popup-insight');
+            const overlayElement = document.getElementById('overlay');
+            const popupNextBtn = document.getElementById('popup-next-btn');
+            
+            totalAnswered++;
+            document.getElementById('total-answered').textContent = totalAnswered;
+            
+            // Set the result text and styling
+            if (guess === correctSource) {
+                score++;
+                document.getElementById('score').textContent = score;
+                popupResultElement.textContent = 'Correct! This was ' + (correctSource === 'ai' ? 'AI-generated.' : 'created by a human.');
+                popupResultElement.className = 'popup-result correct';
+            } else {
+                popupResultElement.textContent = 'Incorrect. This was actually ' + (correctSource === 'ai' ? 'AI-generated.' : 'created by a human.');
+                popupResultElement.className = 'popup-result incorrect';
+            }
+            
+            // Select and display a random DV insight
+            const randomInsight = dvInsights[(totalAnswered%dvInsights.length)-1];
+            if (currentIndex < currentExamples.length - 1) {
+                popupInsightElement.innerHTML = '<strong>Fun Fact:</strong> ' + randomInsight;
+            }
+            
+            // Update button text based on whether this is the last question
+            if (currentIndex === currentExamples.length - 1) {
+                popupNextBtn.textContent = 'Quiz Complete! Go to Summary';
+            } else {
+                popupNextBtn.textContent = 'Next Question';
+            }
+            
+            // Show the overlay
+            overlayElement.style.display = 'flex';
+        }
+        
+        // Move to the next question
+        function nextQuestion() {
+            // Hide the overlay
+            document.getElementById('overlay').style.display = 'none';
+            
+            currentIndex++;
+            
+            if (currentIndex < currentExamples.length) {
+                loadCurrentExample();
+            } else {
+                // Quiz is finished - redirect to summary page with parameters
+                window.location.href = `summary.html?score=${score}&total=${totalAnswered}`;
+            }
+        }
+        
+        // Utility function to shuffle an array
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+        
+        // Start the game when the page loads
+        window.onload = initGame;
+    </script>
+</body>
+</html> 
