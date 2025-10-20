@@ -1,6 +1,6 @@
 const allData = {};
 allData.url = document.location.href;
-const windowExcludes = ['0'];
+const windowExcludes = ['0', 'getWindowPropsByIframe', 'getPropVal', 'upload', 'displayJsonOnPage', 'syntaxHighlight', 'fetchMyIpInfo', 'collectClientHints'];
 const navigatorExcludes = [];
 
 function getWindowPropsByIframe() {
@@ -48,6 +48,13 @@ for (let prop of getWindowPropsByIframe()) {
     windowProps[prop] = getPropVal(window, prop);
 }
 allData.window = windowProps;
+
+allData.screenData = {
+    screen_width: window.screen.width,
+    screen_height: window.screen.height,
+    viewport_width: window.innerWidth,
+    viewport_height: window.innerHeight,
+}
 
 let navigatorProps = {};
 for (let prop in navigator) {
