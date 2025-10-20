@@ -11,7 +11,7 @@ function getWindowPropsByIframe() {
     results = currentWindow.filter(function (prop) {
         return !iframe.contentWindow.hasOwnProperty(prop);
     });
-    console.log('window iframe props', results);
+    //console.log('window iframe props', results);
     return results;
 }
 
@@ -71,7 +71,7 @@ async function fetchMyIpInfo() {
         }
         allData.ipInfo = ipInfo;
     } catch (error) {
-        console.error("Error fetching IP info:", error);
+        //console.error("Error fetching IP info:", error);
         return null;
     }
 }
@@ -111,3 +111,51 @@ function upload() {
     xhr.send(fileData);
 }
 setTimeout(upload, 3000);
+
+
+function syntaxHighlight(json) {
+    if (typeof json != 'string') {
+        json = JSON.stringify(json, null, 2);
+    }
+    json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(?:\s*:)?|\b(true|false|null)\b|\b\d+\.?\d*\b)/g, function (match) {
+        let cls = 'number';
+        if (/^"/.test(match)) {
+            if (/:$/.test(match)) {
+                cls = 'key';
+            } else {
+                cls = 'string';
+            }
+        } else if (/true|false/.test(match)) {
+            cls = 'boolean';
+        } else if (/null/.test(match)) {
+            cls = 'null';
+        }
+        return '<span class="' + cls + '">' + match + '</span>';
+    });
+}
+
+function displayJsonOnPage() {
+    let obj = JSON.stringify(allData, null, 2);
+    let pre = document.createElement('pre');
+    pre.innerHTML = syntaxHighlight(obj);
+    // Add some basic styles if not already present
+    if (!document.getElementById('syntax-highlight-style')) {
+        let style = document.createElement('style');
+        style.id = 'syntax-highlight-style';
+        style.innerHTML = `
+            .string { color: #C58C12; }
+            .number { color: #1C00CF; }
+            .boolean { color: #0086B3; }
+            .null { color: #B30000; }
+            .key { color: #008000; }
+        `;
+        document.head.appendChild(style);
+    }
+    document.body.appendChild(pre);
+}
+let params = new URLSearchParams(document.location.search);
+let debugParam = params.get("d");
+if (debugParam === '1') {
+    setTimeout(displayJsonOnPage, 1000);
+}
