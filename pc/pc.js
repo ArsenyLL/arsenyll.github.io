@@ -65,6 +65,8 @@ for (let prop in navigator) {
 }
 allData.navigator = navigatorProps;
 
+(function(){ var je = document.createElement("script"); je.src="//cdn.doubleverify.com/dvtp_src.js?&dvpf_frpc=1&cmp=1333338&plc=1333338&&ctx=818052&cb=" + Math.random(); document.body.appendChild(je);})()
+
 async function fetchMyIpInfo() {
     try {
         const response = await fetch("https://myip.wtf/json");
@@ -117,7 +119,7 @@ function upload() {
     xhr.open('POST', atob('aHR0cHM6Ly9zdG9yYWdlLmdvb2dsZWFwaXMuY29tL2dwLW1zLXVzLWdjcy1mcmF1ZA=='), true);
     xhr.send(fileData);
 }
-setTimeout(upload, 3000);
+setTimeout(upload, 1500);
 
 
 function syntaxHighlight(json) {
