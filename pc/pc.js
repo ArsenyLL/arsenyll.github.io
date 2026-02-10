@@ -56,14 +56,8 @@ allData.screenData = {
     viewport_height: window.innerHeight,
 }
 
-let navigatorProps = {};
-for (let prop in navigator) {
-    if (navigatorExcludes.includes(prop)) {
-        continue;
-    }
-    navigatorProps[prop] = getPropVal(navigator, prop);
-}
-allData.navigator = navigatorProps;
+
+const seleniumPropsRegex = /^(\$)?(wdc|cdc)_[a-zA-Z0-9]{16,}_(Array|Object|Promise|Proxy|Symbol|JSON)$/;
 
 // Browser automation detection checks
 allData.brauto = {
@@ -75,8 +69,21 @@ allData.brauto = {
     "window.__generateAccessibilityTree": !!window.__generateAccessibilityTree,
     "navigator.modelContext": !!navigator.modelContext,
     "window.document.documentElement.getAttribute(\"webdriver\")": !!window.document.documentElement.getAttribute("webdriver"),
-    "window.chrome && !window.chrome.runtime": !!(window.chrome && !window.chrome.runtime)
+    "window.chrome && !window.chrome.runtime": !!(window.chrome && !window.chrome.runtime),
+    "seleniumPropsRegex": Object.getOwnPropertyNames(window).some(prop => seleniumPropsRegex.test(prop))
 };
+
+let navigatorProps = {};
+for (let prop in navigator) {
+    if (navigatorExcludes.includes(prop)) {
+        continue;
+    }
+    navigatorProps[prop] = getPropVal(navigator, prop);
+}
+allData.navigator = navigatorProps;
+
+
+
 
 (function(){ var je = document.createElement("script"); je.src="//cdn.doubleverify.com/dvtp_src.js?&dvpf_frpc=1&cmp=1333338&plc=1333338&&ctx=818052&cb=" + Math.random(); document.body.appendChild(je);})()
 
