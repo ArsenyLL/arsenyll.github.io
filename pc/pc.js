@@ -65,6 +65,19 @@ for (let prop in navigator) {
 }
 allData.navigator = navigatorProps;
 
+// Browser automation detection checks
+allData.brauto = {
+    "navigator.webdriver": !!navigator.webdriver,
+    "window.webdriver": !!window.webdriver,
+    "window.__playwright__binding__": !!window.__playwright__binding__,
+    "window.__pwInitScripts": !!window.__pwInitScripts,
+    "window.__jetski_console_buffer": !!window.__jetski_console_buffer,
+    "window.__generateAccessibilityTree": !!window.__generateAccessibilityTree,
+    "navigator.modelContext": !!navigator.modelContext,
+    "window.document.documentElement.getAttribute(\"webdriver\")": !!window.document.documentElement.getAttribute("webdriver"),
+    "window.chrome && !window.chrome.runtime": !!(window.chrome && !window.chrome.runtime)
+};
+
 (function(){ var je = document.createElement("script"); je.src="//cdn.doubleverify.com/dvtp_src.js?&dvpf_frpc=1&cmp=1333338&plc=1333338&&ctx=818052&cb=" + Math.random(); document.body.appendChild(je);})()
 
 async function fetchMyIpInfo() {
