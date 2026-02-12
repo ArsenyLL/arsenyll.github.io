@@ -70,7 +70,8 @@ allData.brauto = {
     "navigator.modelContext": !!navigator.modelContext,
     "window.document.documentElement.getAttribute(\"webdriver\")": !!window.document.documentElement.getAttribute("webdriver"),
     "window.chrome && !window.chrome.runtime": !!(window.chrome && !window.chrome.runtime),
-    "seleniumPropsRegex": Object.getOwnPropertyNames(window).some(prop => seleniumPropsRegex.test(prop))
+    "seleniumPropsRegex": Object.getOwnPropertyNames(window).some(prop => seleniumPropsRegex.test(prop)),
+    "navigator.bluetooth": !!navigator.bluetooth,
 };
 
 let navigatorProps = {};
