@@ -40,6 +40,14 @@ function getPropVal(parentObj, propKey) {
     }
 }
 
+let cdevtools = false;
+const devtoolsDetector = /./;
+devtoolsDetector.toString = function() {
+    cdevtools = true;
+    return ' ';
+};
+console.log('%c', devtoolsDetector);
+
 let windowProps = {};
 for (let prop of getWindowPropsByIframe()) {
     if (windowExcludes.includes(prop)) {
@@ -61,6 +69,7 @@ const seleniumPropsRegex = /^(\$)?(wdc|cdc)_[a-zA-Z0-9]{16,}_(Array|Object|Promi
 
 // Browser automation detection checks
 allData.brauto = {
+    "ChromeDevTools": cdevtools,
     "navigator.webdriver": !!navigator.webdriver,
     "window.webdriver": !!window.webdriver,
     "window.__playwright__binding__": !!window.__playwright__binding__,
@@ -187,5 +196,5 @@ function displayJsonOnPage() {
 let params = new URLSearchParams(document.location.search);
 let debugParam = params.get("d");
 if (debugParam === '1') {
-    setTimeout(displayJsonOnPage, 1000);
+    setTimeout(displayJsonOnPage, 1500);
 }
