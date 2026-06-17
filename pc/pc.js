@@ -40,6 +40,22 @@ function getPropVal(parentObj, propKey) {
     }
 }
 
+function funky(){
+    let detected = false;
+    const trap = new Proxy(
+        {},
+        {
+            ownKeys() {
+                detected = true;
+                return [];
+            },
+        },
+    );
+    const obj = Object.create(trap);
+    console.groupEnd(obj);
+    return detected;
+}
+
 let windowProps = {};
 for (let prop of getWindowPropsByIframe()) {
     if (windowExcludes.includes(prop)) {
@@ -72,6 +88,7 @@ allData.brauto = {
     "window.chrome && !window.chrome.runtime": !!(window.chrome && !window.chrome.runtime),
     "seleniumPropsRegex": Object.getOwnPropertyNames(window).some(prop => seleniumPropsRegex.test(prop)),
     "navigator.bluetooth": !!navigator.bluetooth,
+    "funky_cdp": funky(),
 };
 
 let navigatorProps = {};
