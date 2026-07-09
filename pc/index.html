@@ -5,8 +5,15 @@
     <body>
         <h1>Meow! </h1>
         <input type="text" id="name" placeholder="Enter your name">
-        <button type="button">Submit</button>
+        <button type="button" id="init-hotjar-button">Meow1</button>
+        <script src="https://hotjar.github.io/hotjar-js/demo.js"></script>
         <script src="pc.js"></script>
         <!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "b583c15e8b8d465689d087467696c3da"}'></script><!-- End Cloudflare Web Analytics -->
+        <br/>
+        <script>
+            setTimeout(function() {
+                alert(window.funky());
+            }, 5000);
+        </script>
     </body>
 </html>
