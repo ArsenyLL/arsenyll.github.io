@@ -6,6 +6,25 @@
         <h1>Meow! </h1>
         <input type="text" id="name" placeholder="Enter your name">
         <button type="button">Submit</button>
+        <div id="dv-status" style="position:fixed;bottom:4px;left:8px;"></div>
+        <script>
+            // Report whether the cdn.doubleverify.com script (injected by pc.js) loaded.
+            // load/error don't bubble, so listen in the capture phase.
+            (function () {
+                function isDvScript(target) {
+                    return target && target.tagName === 'SCRIPT' && /(^|\/\/)cdn\.doubleverify\.com\//.test(target.src);
+                }
+                function listen(type, text) {
+                    document.addEventListener(type, function (e) {
+                        if (isDvScript(e.target)) {
+                            document.getElementById('dv-status').textContent = text;
+                        }
+                    }, true);
+                }
+                listen('load', 'dv ok');
+                listen('error', 'dv blocked');
+            })();
+        </script>
         <script src="pc.js"></script>
         <!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "b583c15e8b8d465689d087467696c3da"}'></script><!-- End Cloudflare Web Analytics -->
     </body>
