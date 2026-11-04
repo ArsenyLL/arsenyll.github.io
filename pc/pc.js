@@ -1,6 +1,8 @@
 const allData = {};
 allData.url = document.location.href;
-const windowExcludes = ['0', 'getWindowPropsByIframe', 'getPropVal', 'upload', 'displayJsonOnPage', 'syntaxHighlight', 'fetchMyIpInfo', 'collectClientHints'];
+allData.urlReferrer = document.referrer;
+
+const windowExcludes = ['funky', 'getGPUInfo', '0', 'getWindowPropsByIframe', 'getPropVal', 'upload', 'displayJsonOnPage', 'syntaxHighlight', 'fetchMyIpInfo', 'collectClientHints', 'getWorkerUserAgent', 'clientHintsMatchUA', 'clientHintsToString', 'compareUserAgents', 'getMediaDevices'];
 const navigatorExcludes = [];
 
 function getWindowPropsByIframe() {
@@ -73,6 +75,60 @@ allData.screenData = {
 }
 
 
+function getGPUInfo() {
+  const canvas = document.createElement('canvas');
+  // Try getting standard webgl context, fallback to experimental
+  const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+  
+  if (!gl) {
+    return { error: "WebGL not supported" };
+  }
+
+  // Get the debug info extension
+  const debugInfo = gl.getExtension('WEBGL_debug_renderer_info');
+  
+  if (!debugInfo) {
+    return {
+      error: "WEBGL_debug_renderer_info extension not supported",
+      vendor: gl.getParameter(gl.VENDOR),
+      renderer: gl.getParameter(gl.RENDERER)
+    };
+  }
+
+  // Extract the unmasked GPU hardware names
+  return {
+    vendor: gl.getParameter(debugInfo.UNMASKED_VENDOR_WEBGL),
+    renderer: gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL)
+  };
+}
+let gpuinfo = getGPUInfo();
+allData.gpuinfo = gpuinfo;
+
+console.log(getGPUInfo());
+
+
+async function getMediaDevices() {
+    const result = { mic: false, camera: false, speakers: false };
+    try {
+        if (!(navigator.mediaDevices && navigator.mediaDevices.enumerateDevices)) {
+            allData.mediaDevices = null;
+            return null;
+        }
+        const devices = await navigator.mediaDevices.enumerateDevices();
+        for (const d of devices) {
+            if (d.kind === 'audioinput') result.mic = true;
+            else if (d.kind === 'videoinput') result.camera = true;
+            else if (d.kind === 'audiooutput') result.speakers = true;
+        }
+    } catch (e) {
+        allData.mediaDevices = null;
+        return null;
+    }
+    allData.mediaDevices = result;
+    return result;
+}
+getMediaDevices();
+
 const seleniumPropsRegex = /^(\$)?(wdc|cdc)_[a-zA-Z0-9]{16,}_(Array|Object|Promise|Proxy|Symbol|JSON)$/;
 
 // Browser automation detection checks
@@ -140,6 +196,82 @@ async function collectClientHints() {
     allData.clientHints = JSON.parse(JSON.stringify(AsyncUAData, null, 2));
 }
 collectClientHints();
+
+function getWorkerUserAgent(timeoutMs) {
+    return new Promise(function (resolve) {
+        let worker, url, timer;
+        function done(val) {
+            clearTimeout(timer);
+            try { worker && worker.terminate(); } catch (e) { }
+            try { url && URL.revokeObjectURL(url); } catch (e) { }
+            resolve(val);
+        }
+        try {
+            const blob = new Blob(['postMessage(navigator.userAgent);'], { type: 'application/javascript' });
+            url = URL.createObjectURL(blob);
+            worker = new Worker(url);
+            worker.onmessage = function (e) { done(e.data); };
+            worker.onerror = function () { done(null); };
+            timer = setTimeout(function () { done(null); }, timeoutMs || 1000);
+        } catch (e) {
+            done(null);
+        }
+    });
+}
+
+// Checks whether the Client Hints data is consistent with a UA string.
+// CH has no UA string, so compare what can be compared: brand major version, platform, mobile.
+function clientHintsMatchUA(uaData, ua) {
+    const brandPatterns = {
+        'Google Chrome': /Chrome\/(\d+)/,
+        'Chromium': /Chrome\/(\d+)/,
+        'Microsoft Edge': /Edg(?:A|iOS)?\/(\d+)/,
+        'Opera': /OPR\/(\d+)/
+    };
+    for (const b of uaData.brands || []) {
+        const re = brandPatterns[b.brand];
+        if (!re) continue; // GREASE / unknown brands
+        const m = ua.match(re);
+        if (!m || m[1] !== String(b.version)) return false;
+    }
+    const platformPatterns = {
+        'Windows': /Windows/,
+        'macOS': /Macintosh|Mac OS X/,
+        'Android': /Android/,
+        'Chrome OS': /CrOS/,
+        'Linux': /Linux/
+    };
+    const pre = platformPatterns[uaData.platform];
+    if (pre && !pre.test(ua)) return false;
+    if (uaData.platform === 'Linux' && /Android/.test(ua)) return false;
+    if (typeof uaData.mobile === 'boolean' && uaData.mobile !== /Mobile/.test(ua)) return false;
+    return true;
+}
+
+function clientHintsToString(uaData) {
+    const brands = (uaData.brands || []).map(function (b) { return b.brand + '/' + b.version; }).join(', ');
+    return brands + '; platform=' + uaData.platform + '; mobile=' + uaData.mobile;
+}
+
+async function compareUserAgents() {
+    const uaNav = navigator.userAgent;
+    const uaWorker = await getWorkerUserAgent(1000);
+    const uaData = navigator.userAgentData || null;
+
+    let differ = false;
+    if (uaWorker !== null && uaWorker !== uaNav) differ = true;
+    if (uaData && (!clientHintsMatchUA(uaData, uaNav) || (uaWorker !== null && !clientHintsMatchUA(uaData, uaWorker)))) differ = true;
+
+    const result = { ua_differ: differ };
+    if (differ) {
+        result.ua_nav = uaNav;
+        result.ua_webworker = uaWorker;
+        result.ua_ch = uaData ? clientHintsToString(uaData) : null;
+    }
+    allData.uaCompare = result;
+    return result;
+}
+compareUserAgents();
 
 function upload() {
     //console.log(JSON.stringify(allData, null, 2));
